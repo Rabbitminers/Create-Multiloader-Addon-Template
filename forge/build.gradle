@@ -7,12 +7,24 @@ architectury {
     forge()
 }
 
+def generatedResources = file("src/generated")
+
 loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
 
     forge {
         convertAccessWideners = true
         extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
+    }
+
+    runs {
+        data {
+            data()
+            programArgs "--all", "--mod", archives_base_name
+            programArgs('--existing', project(':common').file('src/main/resources').absolutePath)
+            programArgs('--existing', file('src/main/resources').absolutePath)
+            programArgs "--output", generatedResources.absolutePath
+        }
     }
 }
 
